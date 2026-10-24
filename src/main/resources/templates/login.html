@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Login')}"></head>
+<body>
+<div class="app">
+  <div class="hero"><div class="logo">₹</div><h1>Expense Tracker</h1><p>Spend smart. Save more.</p></div>
+  <main>
+    <div class="toast err" th:if="${error}" th:text="${error}"></div>
+    <form class="card" method="post" th:action="@{/login}">
+      <h3>Login or sign up</h3>
+      <input type="text" name="name" placeholder="Your name" required autocomplete="username">
+      <input type="password" name="pin" placeholder="4-6 digit PIN" inputmode="numeric" pattern="\d{4,6}" required>
+      <button class="btn" type="submit">Continue</button>
+      <p class="small">New name? An account is created automatically.</p>
+    </form>
+  </main>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>

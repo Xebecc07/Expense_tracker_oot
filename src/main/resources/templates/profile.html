@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Profile')}"></head>
+<body>
+<div class="app">
+<div th:replace="~{fragments :: header('Profile &amp; Plans')}"></div>
+<main>
+  <div th:replace="~{fragments :: flash}"></div>
+  <div class="card"><b th:text="${user.name}"></b>
+    <div class="small" th:text="'Current plan: ' + ${user.plan.name}"></div></div>
+  <h3 class="sec">Plans</h3>
+  <div class="card plan" th:each="p : ${plans}" th:classappend="${p.name == user.plan.name} ? 'current'">
+    <div class="row"><h3 th:text="${p.name}"></h3><b th:text="${@money.format(p.monthlyPrice)} + '/mo'"></b></div>
+    <div class="small" th:text="${p.unlimited} ? 'Unlimited expenses' : ${p.monthlyExpenseLimit} + ' expenses per month'"></div>
+    <ul class="feat"><li th:each="f : ${features}" th:class="${p.allows(f)} ? 'yes' : 'no'" th:text="(${p.allows(f)} ? '✓ ' : '✗ ') + ${f.label}"></li></ul>
+    <form method="post" th:action="@{/profile/plan}" th:unless="${p.name == user.plan.name}">
+      <input type="hidden" name="plan" th:value="${p.name.toUpperCase()}">
+      <input type="text" name="studentId" placeholder="Student ID (required)" th:if="${p.name == 'Student'}" required>
+      <button class="btn" type="submit" th:text="${p.monthlyPrice == 0} ? 'Switch to Free' : 'Upgrade to ' + ${p.name}"></button>
+    </form>
+  </div>
+  <form class="card" method="post" th:action="@{/profile/emergency}">
+    <h3>Emergency fund</h3>
+    <div class="small" th:text="'Saved so far: ' + ${@money.format(user.emergencyFund)}"></div>
+    <input type="number" name="amount" min="1" step="any" placeholder="Deposit amount" required>
+    <button class="btn" type="submit">Deposit</button>
+  </form>
+  <form class="card" method="post" th:action="@{/profile/money}">
+    <h3>Income &amp; budget</h3>
+    <input type="number" name="income" min="1" step="any" th:value="${user.income}" required>
+    <input type="number" name="budget" min="1" step="any" th:value="${user.monthlyBudget}" required>
+    <button class="btn" type="submit">Save</button>
+  </form>
+  <form method="post" th:action="@{/seed}"><button class="btn ghost" type="submit">Load demo data</button></form>
+  <a class="btn ghost" href="/logout">Log out</a>
+</main>
+<div th:replace="~{fragments :: bottom('profile')}"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+<div class="app">
+<div th:replace="~{fragments :: header(${'Hi, ' + user.name})}"></div>
+<main>
+  <div th:replace="~{fragments :: flash}"></div>
+  <div class="card budget">
+    <div class="row"><span>Last 30 days</span><span class="chip" th:text="${user.plan.name} + ' plan'"></span></div>
+    <div class="big" th:text="${@money.format(spent)}">Rs. 0</div>
+    <div class="small" th:text="'of ' + ${@money.format(user.monthlyBudget)} + ' budget (' + ${pct} + '%)'"></div>
+    <div class="bar"><div class="fill" th:classappend="${pct > 100} ? 'over'" th:style="'width:' + ${barWidth} + '%'"></div></div>
+  </div>
+  <a class="card streak" href="/insights">🔥 <span th:text="${streak}"></span></a>
+  <h3 class="sec">Recent expenses</h3>
+  <div class="card list">
+    <div class="item" th:each="e : ${recent}">
+      <div><b th:text="${e.description}"></b>
+        <div class="small"><span th:text="${e.category}"></span> · <span th:text="${#temporals.format(e.time, 'dd MMM, HH:mm')}"></span>
+          <span class="chip s" th:if="${e.type != 'Regular'}" th:text="${e.type}"></span></div></div>
+      <div class="amt" th:text="${@money.format(e.amount)}"></div>
+    </div>
+    <div class="empty" th:if="${#lists.isEmpty(recent)}">
+      <p>No expenses yet. Tap + to add one, or load demo data.</p>
+    </div>
+  </div>
+  <form method="post" th:action="@{/seed}"><button class="btn ghost" type="submit">Load demo data</button></form>
+</main>
+<div th:replace="~{fragments :: bottom('home')}"></div>
+</div>
+</body>
+</html>

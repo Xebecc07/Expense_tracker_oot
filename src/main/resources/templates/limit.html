@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Limit reached')}"></head>
+<body>
+<div class="app">
+<div th:replace="~{fragments :: header('Limit reached')}"></div>
+<main>
+  <div class="card center">
+    <div class="big">🚀</div>
+    <h3>You've hit your monthly limit</h3>
+    <p th:text="${message}"></p>
+    <a class="btn" href="/profile">Upgrade plan</a>
+    <a class="btn ghost" href="/">Back to home</a>
+  </div>
+</main>
+<div th:replace="~{fragments :: bottom('home')}"></div>
+</div>
+</body>
+</html>

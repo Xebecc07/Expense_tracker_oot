@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Insights')}"></head>
+<body>
+<div class="app">
+<div th:replace="~{fragments :: header('Insights')}"></div>
+<main>
+  <div th:replace="~{fragments :: flash}"></div>
+  <div class="card" th:each="v : ${views}" th:classappend="${!v.unlocked} ? 'locked'">
+    <h3 th:text="${v.name}"></h3>
+    <div class="pills" th:if="${v.streakCard and v.unlocked}">
+      <a class="pill" th:each="t : ${streakTypes}" th:href="@{/insights(streak=${t})}" th:text="${t.label}" th:classappend="${t == selected} ? 'on'"></a>
+    </div>
+    <pre class="txt" th:if="${v.unlocked}" th:text="${v.text}"></pre>
+    <div th:unless="${v.unlocked}">
+      <p class="small">🔒 Locked. Upgrade to the <b th:text="${v.requiredPlan}"></b> plan to unlock.</p>
+      <a class="btn" href="/profile">Upgrade</a>
+    </div>
+  </div>
+</main>
+<div th:replace="~{fragments :: bottom('insights')}"></div>
+</div>
+</body>
+</html>

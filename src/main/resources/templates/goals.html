@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Goals')}"></head>
+<body>
+<div class="app">
+<div th:replace="~{fragments :: header('Goals &amp; Festivals')}"></div>
+<main>
+  <div th:replace="~{fragments :: flash}"></div>
+  <h3 class="sec">Goals</h3>
+  <div class="card" th:each="g : ${user.goals}">
+    <div class="row"><b th:text="${g.name}"></b><span class="small" th:text="'by ' + ${g.deadline}"></span></div>
+    <div class="small" th:text="${@money.format(g.saved)} + ' of ' + ${@money.format(g.target)}"></div>
+    <div class="bar"><div class="fill" th:style="'width:' + ${g.target > 0 ? g.saved / g.target * 100 : 0} + '%'"></div></div>
+  </div>
+  <form class="card" method="post" th:action="@{/goals}">
+    <h3>Add a goal</h3>
+    <input type="text" name="name" placeholder="Goal name" required>
+    <input type="number" name="target" min="1" step="any" placeholder="Target amount" required>
+    <input type="number" name="saved" min="0" step="any" placeholder="Already saved (optional)">
+    <label class="small">Deadline</label><input type="date" name="deadline" required>
+    <button class="btn" type="submit">Add goal</button>
+  </form>
+  <h3 class="sec">Festivals</h3>
+  <div class="card" th:each="f : ${user.festivals}">
+    <div class="row"><b th:text="${f.name}"></b><span class="small" th:text="${f.date}"></span></div>
+    <div class="small" th:text="'Saved ' + ${@money.format(f.saved)} + ' of ' + ${@money.format(f.budget)}"></div>
+    <div class="bar"><div class="fill" th:style="'width:' + ${f.budget > 0 ? f.saved / f.budget * 100 : 0} + '%'"></div></div>
+  </div>
+  <form class="card" method="post" th:action="@{/festivals}">
+    <h3>Plan a festival</h3>
+    <input type="text" name="name" placeholder="Festival name" required>
+    <input type="number" name="budget" min="1" step="any" placeholder="Budget" required>
+    <input type="number" name="saved" min="0" step="any" placeholder="Already saved (optional)">
+    <label class="small">Festival date</label><input type="date" name="date" required>
+    <button class="btn" type="submit">Add festival</button>
+  </form>
+</main>
+<div th:replace="~{fragments :: bottom('goals')}"></div>
+</div>
+</body>
+</html>
